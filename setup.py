@@ -77,7 +77,7 @@ def get_extensions():
 
 
 install_requires = []
-setup_requires = []
+setup_requires = ['torch']
 tests_require = ['pytest', 'pytest-runner', 'pytest-cov']
 
 setup(
