@@ -7,6 +7,10 @@ from setuptools import setup, find_packages
 
 os.environ["CUDA_HOME"] = "/usr/local/cuda"
 os.environ["MAX_JOBS"] = f"{os.cpu_count()}"
+LD_LIBRARY_PATH = os.environ["LD_LIBRARY_PATH"]
+if LD_LIBRARY_PATH.startswith(":"):
+    LD_LIBRARY_PATH = LD_LIBRARY_PATH[1:]
+os.environ["LD_LIBRARY_PATH"] = ":/usr/lib:/usr/local/lib:/usr/local/cuda/lib64:" + LD_LIBRARY_PATH
 
 import torch
 from torch.__config__ import parallel_info
