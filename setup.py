@@ -6,6 +6,7 @@ from itertools import product
 from setuptools import setup, find_packages
 
 os.environ["CUDA_HOME"] = "/usr/local/cuda"
+os.environ["MAX_JOBS"] = f"{os.cpu_count()}"
 
 import torch
 from torch.__config__ import parallel_info
@@ -14,15 +15,7 @@ from torch.utils.cpp_extension import CppExtension, CUDAExtension, CUDA_HOME
 
 
 WITH_CUDA = torch.cuda.is_available() and CUDA_HOME is not None
-suffices = ["cpu", "cuda"] if WITH_CUDA else ["cpu"]
-if os.getenv("FORCE_CUDA", "0") == "1":
-    suffices = ["cuda", "cpu"]
-if os.getenv("FORCE_ONLY_CUDA", "0") == "1":
-    suffices = ["cuda"]
-if os.getenv("FORCE_ONLY_CPU", "0") == "1":
-    suffices = ["cpu"]
-
-BUILD_DOCS = os.getenv("BUILD_DOCS", "0") == "1"
+suffices = ["cpu", "cuda"]
 
 
 def get_extensions():
@@ -78,6 +71,11 @@ def get_extensions():
                 "/usr/local/include",
                 "/usr/local/cuda/include",
             ],
+            library_dirs=[
+                "/usr/lib",
+                "/usr/local/lib",
+                "/usr/local/cuda/lib64",
+            ],
             define_macros=define_macros,
             extra_compile_args=extra_compile_args,
             extra_link_args=extra_link_args,
@@ -105,7 +103,7 @@ setup(
     setup_requires=setup_requires,
     tests_require=tests_require,
     extras_require={"test": tests_require},
-    ext_modules=get_extensions() if not BUILD_DOCS else [],
+    ext_modules=get_extensions(),
     cmdclass={"build_ext": BuildExtension.with_options(no_python_abi_suffix=True, use_ninja=True)},
     packages=find_packages(),
 )
