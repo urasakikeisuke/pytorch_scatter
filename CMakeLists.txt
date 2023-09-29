@@ -3,7 +3,7 @@ project(torchscatter)
 set(CMAKE_CXX_STANDARD 14)
 set(TORCHSCATTER_VERSION 2.0.9)
 
-option(WITH_CUDA "Enable CUDA support" OFF)
+option(WITH_CUDA "Enable CUDA support" ON)
 
 if(WITH_CUDA)
   enable_language(CUDA)

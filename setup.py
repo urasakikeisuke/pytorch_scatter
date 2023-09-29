@@ -5,6 +5,7 @@ import os.path as osp
 from itertools import product
 from setuptools import setup, find_packages
 
+os.environ["USE_ROCM"] = "0"
 os.environ["CUDA_HOME"] = "/usr/local/cuda"
 os.environ["MAX_JOBS"] = f"{os.cpu_count()}"
 LD_LIBRARY_PATH = os.environ["LD_LIBRARY_PATH"]
@@ -108,6 +109,6 @@ setup(
     tests_require=tests_require,
     extras_require={"test": tests_require},
     ext_modules=get_extensions(),
-    cmdclass={"build_ext": BuildExtension.with_options(no_python_abi_suffix=True, use_ninja=False)},
+    cmdclass={"build_ext": BuildExtension.with_options(no_python_abi_suffix=True, use_ninja=True)},
     packages=find_packages(),
 )
